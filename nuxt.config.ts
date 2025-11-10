@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { env } from './shared/utils/env';
+// import { env } from './shared/utils/env';
 
 export default defineNuxtConfig({
   modules: [
@@ -30,9 +30,9 @@ export default defineNuxtConfig({
   experimental: { typedPages: true },
 
   runtimeConfig: {
-    adminEmail: env.ADMIN_EMAIl,
-    adminPass: env.ADMIN_PASS,  
-    public: { siteUrl: env.NUXT_PUBLIC_APP_URL }
+    adminEmail: process.env.ADMIN_EMAIl,
+    adminPass: process.env.ADMIN_PASS,  
+    public: { siteUrl: process.env.NUXT_PUBLIC_APP_URL }
   },
 
   routeRules: { "/admin/**": { ssr: false, static: true } },
