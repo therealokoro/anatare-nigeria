@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@vueuse/nuxt",
     "@nuxthub/core",
+    '@nuxt/devtools',
     '@peterbud/nuxt-query'
   ],
 
@@ -26,7 +27,7 @@ export default defineNuxtConfig({
   hub: { kv: true, database: true, blob: true },
   eslint: { config: { stylistic: true, standalone: false } },
   nuxtQuery: { autoImports: true, devtools: false },
-  nitro: { experimental: { tasks: true } },
+  nitro: { experimental: { tasks: true, openAPI: true } },
   experimental: { typedPages: true },
 
   runtimeConfig: {

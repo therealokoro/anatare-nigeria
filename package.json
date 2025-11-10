@@ -46,7 +46,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
     "@cloudflare/workers-types": "^4.20251109.0",
-    "@nuxt/devtools": "^3.1.0",
+    "@nuxt/devtools": "^3.0.1",
     "@nuxt/eslint": "^1.10.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
