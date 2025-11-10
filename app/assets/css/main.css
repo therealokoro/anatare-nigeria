@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+@theme static {
+  --color-brand-primary-50: oklch(0.947 0.081 159.72);
+  --color-brand-primary-100: oklch(0.893 0.179 159.52);
+  --color-brand-primary-200: oklch(0.806 0.183 159.32);
+  --color-brand-primary-300: oklch(0.721 0.164 159.3);
+  --color-brand-primary-400: oklch(0.629 0.142 159.41);
+  --color-brand-primary-500: oklch(0.547 0.124 159.37);
+  --color-brand-primary-600: oklch(0.463 0.105 159.35);
+  --color-brand-primary-700: oklch(0.387 0.088 159.52);
+  --color-brand-primary-800: oklch(0.301 0.067 160.03);
+  --color-brand-primary-900: oklch(0.219 0.05 159.91);
+  --color-brand-primary-950: oklch(0.173 0.039 160.27);
+
+	--color-brand-secondary-50: oklch(0.969 0.001 195.44);
+  --color-brand-secondary-100: oklch(0.931 0.002 247.74);
+  --color-brand-secondary-200: oklch(0.857 0.006 264.59);
+  --color-brand-secondary-300: oklch(0.785 0.008 260.76);
+  --color-brand-secondary-400: oklch(0.709 0.012 269.54);
+  --color-brand-secondary-500: oklch(0.642 0.013 259.83);
+  --color-brand-secondary-600: oklch(0.562 0.016 268.4);
+  --color-brand-secondary-500: oklch(0.485 0.014 264.45);
+  --color-brand-secondary-500: oklch(0.402 0.01 271.18);
+  --color-brand-secondary-500: oklch(0.317 0.008 264.48);
+  --color-brand-secondary-500: oklch(0.213 0.004 264.5);
+}
+
+@utility flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

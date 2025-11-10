@@ -1,0 +1,163 @@
+@import "@vueup/vue-quill/dist/vue-quill.snow.css";
+
+/* Reference your Tailwind/Nuxt UI theme */
+@reference "./main.css";
+
+/* =========================================
+   Snow Theme Toolbar
+========================================= */
+.ql-toolbar.ql-snow {
+  @apply rounded-t-md border border-[--ui-border] font-sans bg-[--ui-bg-elevated];
+}
+
+.ql-toolbar.ql-snow .ql-stroke {
+  stroke: var(--ui-text-muted);
+}
+
+.ql-toolbar.ql-snow .ql-fill {
+  fill: var(--ui-text-muted);
+}
+
+.ql-toolbar.ql-snow button {
+  @apply mx-0.5 rounded-md hover:bg-[--ui-bg-hover] hover:text-[--ui-text];
+}
+
+.ql-toolbar.ql-snow button:hover .ql-fill {
+  fill: var(--ui-text);
+}
+
+.ql-toolbar.ql-snow button:hover .ql-stroke {
+  stroke: var(--ui-text);
+}
+
+.ql-toolbar.ql-snow button.ql-active {
+  background-color: var(--ui-primary);
+  color: var(--ui-primary-foreground);
+}
+
+.ql-toolbar.ql-snow button.ql-active .ql-stroke,
+.ql-toolbar.ql-snow button.ql-active .ql-fill {
+  stroke: var(--ui-primary-foreground);
+  fill: var(--ui-primary-foreground);
+}
+
+/* =========================================
+   Picker & Formats
+========================================= */
+.ql-toolbar.ql-snow .ql-formats svg,
+.ql-toolbar.ql-snow .ql-formats .ql-picker-label,
+.ql-toolbar.ql-snow .ql-formats .ql-picker {
+  color: var(--ui-text-muted);
+}
+
+.ql-toolbar.ql-snow .ql-picker {
+  @apply rounded-md;
+}
+
+.ql-toolbar.ql-snow .ql-picker .ql-picker-options {
+  @apply mt-1 rounded-md border border-[--ui-border] bg-[--ui-bg-elevated] p-1 shadow-sm;
+}
+
+.ql-toolbar.ql-snow .ql-picker-item {
+  @apply rounded hover:bg-[--ui-bg-hover] hover:text-[--ui-text];
+}
+
+.ql-toolbar.ql-snow .ql-picker-item.ql-selected {
+  background-color: var(--ui-primary);
+  color: var(--ui-primary-foreground);
+}
+
+.ql-toolbar.ql-snow .ql-picker-label {
+  @apply hover:rounded hover:bg-[--ui-bg-hover] hover:text-[--ui-text];
+}
+
+.ql-toolbar.ql-snow .ql-picker-label.ql-active {
+  background-color: var(--ui-primary);
+  color: var(--ui-primary-foreground);
+}
+
+.ql-toolbar.ql-snow .ql-expanded .ql-picker-label {
+  @apply border border-[--ui-border];
+}
+
+/* =========================================
+   Container
+========================================= */
+.ql-container {
+  @apply min-h-[150px] font-sans text-sm bg-[--ui-bg] text-[--ui-text];
+}
+
+.ql-container.ql-snow {
+  @apply rounded-b-md border border-[--ui-border];
+}
+
+.ql-container.ql-snow a {
+  color: var(--ui-primary);
+  text-decoration: underline;
+}
+
+.ql-container .ql-editor {
+  @apply min-h-[150px] max-h-[400px];
+}
+
+.ql-container .ql-editor.ql-blank::before {
+  color: var(--ui-text-muted);
+  @apply not-italic;
+}
+
+/* =========================================
+   Tooltip
+========================================= */
+.ql-container .ql-tooltip {
+  @apply z-[9999] rounded-md border border-[--ui-border] bg-[--ui-bg-elevated] px-4 py-2 text-sm text-[--ui-text] shadow-md;
+}
+
+.ql-container .ql-tooltip input[type="text"] {
+  @apply h-8 w-[200px] rounded-md border border-[--ui-border] bg-[--ui-bg-soft] p-2 text-sm text-[--ui-text] focus:outline-none focus:ring-1 focus:ring-[--ui-ring];
+}
+
+.ql-container .ql-tooltip .ql-preview {
+  @apply text-sm leading-[26px] underline underline-offset-2;
+}
+
+.ql-container .ql-tooltip .ql-remove {
+  color: var(--ui-destructive);
+  @apply hover:text-[--ui-destructive];
+}
+
+/* =========================================
+   Bubble Theme
+========================================= */
+.ql-container.ql-bubble {
+  @apply rounded-md border border-[--ui-border] bg-[--ui-bg];
+}
+
+.ql-container.ql-bubble .ql-tooltip {
+  @apply z-[9999] rounded-lg border border-[--ui-border] bg-[--ui-bg-elevated] px-4 py-2 text-sm text-[--ui-text] shadow-md;
+}
+
+.ql-container.ql-bubble .ql-toolbar {
+  @apply flex items-center gap-1;
+}
+
+.ql-container.ql-bubble .ql-toolbar button {
+  @apply mx-0.5 rounded-md hover:bg-[--ui-bg-hover] hover:text-[--ui-text];
+}
+
+.ql-container.ql-bubble .ql-toolbar button.ql-active {
+  background-color: var(--ui-primary);
+  color: var(--ui-primary-foreground);
+}
+
+.ql-container.ql-bubble .ql-picker .ql-picker-options {
+  @apply mt-1 rounded-md border border-[--ui-border] bg-[--ui-bg-elevated] p-1;
+}
+
+/* =========================================
+   Color + Align Pickers
+========================================= */
+.ql-container.ql-bubble .ql-align .ql-picker-item.ql-selected,
+.ql-container.ql-bubble .ql-color-picker .ql-picker-item.ql-selected {
+  background-color: var(--ui-primary);
+  color: var(--ui-primary-foreground);
+}

@@ -1,0 +1,1 @@
+export type { IArticle } from "~~/server/database/schema/articles"
