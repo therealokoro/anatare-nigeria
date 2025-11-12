@@ -30,6 +30,8 @@ export default defineNuxtConfig({
   nitro: { experimental: { tasks: true, openAPI: true } },
   experimental: { typedPages: true },
 
+  vite: { optimizeDeps: { exclude: ['@tanstack/vue-query-devtools'] } },
+
   runtimeConfig: {
     adminEmail: process.env.ADMIN_EMAIl,
     adminPass: process.env.ADMIN_PASS,  
@@ -38,20 +40,20 @@ export default defineNuxtConfig({
 
   routeRules: { "/admin/**": { ssr: false, static: true } },
 
-  image: {
-    quality: 80,
-    format: ['webp','jpeg'],
-    provider: 'ipx',
-    providers: {
-      blob: {
-        name: 'local-ipx',
-        provider: '~/lib/img-provider.ts',
-        options: {
-          baseURL: '/cdn/images'
+  image: { quality: 80, format: ['webp','jpeg'] },
+
+  $development: {
+    image: {
+      provider: "local",
+      providers: {
+        local: {
+          name: 'local',
+          provider: '~/lib/img-provider.ts',
+          options: {
+            baseURL: '/cdn/images'
+          }
         }
       }
-    }
-  },
-
-  $development: { image: { provider: "local-ipx" } }
+    },
+  }
 })
