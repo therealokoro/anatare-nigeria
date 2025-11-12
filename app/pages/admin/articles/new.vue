@@ -17,6 +17,6 @@ async function onSubmit(data: any) {
   <Page title="Create Article">
     <h1 class="text-lg font-bold mb-5">Fill the form below to create an article</h1>
 
-    <ArticleForm mode="Create" :initial="state" @submit="onSubmit" />
+    <ArticleForm v-model:loading="addArticle.isPending.value" mode="Create" :initial="state" @submit="onSubmit" />
   </Page>
 </template>

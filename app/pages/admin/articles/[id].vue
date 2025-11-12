@@ -1,6 +1,5 @@
 <script setup lang="ts">
-const route = useRoute("admin-articles-id")
-const id = route.params.id
+const id = useRoute("admin-articles-id").params.id as string
 
 const { data: article, error, isLoading } = useFetchArticleById(id)
 
@@ -50,7 +49,7 @@ function initDeleteArticle() {
           <h2>Are you sure you want to delete this article?</h2>
 
           <div class="flex items-center gap-2">
-            <UButton label="Confirm" @click="initDeleteArticle" color="error" />
+            <UButton :loading="deleteArticle.isPending.value" label="Confirm" @click="initDeleteArticle" color="error" />
             <UButton label="Cancel" @click="openDeleteModal = false" variant="ghost" color="neutral" />
           </div>
         </div>

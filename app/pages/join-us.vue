@@ -1,10 +1,4 @@
 <script lang="ts" setup>
-// import { toTypedSchema as s } from "@vee-validate/zod"
-// import { ContactUsSchema } from "~~/shared/schemas"
-
-// const $form = useForm({ validationSchema: s(ContactUsSchema) })
-// const onSubmit = $form.handleSubmit(async () => {})
-
 const form = ref({
   name: "",
   email: "",
@@ -16,7 +10,6 @@ const form = ref({
 
 const onSubmit = () => {
   console.log("Form submitted:", form.value)
-  // You can integrate your actual submission logic here
 }
 </script>
 

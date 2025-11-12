@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-const route = useRoute("articles-slug")
-const { data, error, suspense } = useFetchArticleBySlug(route.params.slug)
+const id = useRoute().params.slug as string
+const { data, error, suspense } = useFetchArticleBySlug(id)
 
-await suspense()
+onServerPrefetch(await suspense())
 
 if(error.value){ throw createError(error.value) }
 
