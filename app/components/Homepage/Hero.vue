@@ -36,29 +36,31 @@ const partnerLogos = [
     <!-- Hexagon Images -->
     <div class="relative flex-center lg:justify-end">
       <div class="hidden md:block">
-        <img
+        <NuxtImg
           src="/images/landing-image-grid.png"
           alt="Landing Image"
           format="webp"
+          placeholder
           width="450"
           preload
-        >
+        />
       </div>
 
       <div class="md:hidden">
-        <img
+        <NuxtImg
           src="/images/landing-img-mobile.png"
           alt="Landing Image"
           format="webp"
+          placeholder
           width="450"
           preload
-        >
+        />
       </div>
     </div>
 
     <!-- Overlay Background -->
     <div
-      class="absolute inset-0 -z-10 h-screen bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"
+      class="absolute inset-0 -z-10 h-screen bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-size-[6rem_4rem]"
     />
 
     <template #links>

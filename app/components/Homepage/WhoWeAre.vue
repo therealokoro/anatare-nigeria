@@ -3,13 +3,14 @@
     <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row overflow-hidden">
       <!-- Image -->
       <div class="lg:flex-1 h-[300px] lg:h-[500px]">
-        <img
+        <NuxtImg
           src="/images/smiling-kids.jpg"
           alt="Smiling Young Boy"
           class="w-full h-full object-cover object-[60%,50%]"
           format="webp"
           preload
-        >
+          placeholder
+        />
       </div>
 
       <!-- Write Up -->

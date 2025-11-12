@@ -8,13 +8,14 @@ const { images } = useGallery()
       <div
         v-for="item in images"
         :key="item.src"
-        class="relative size-[150px] md:size-[250px] rounded-lg overflow-hidden flex-shrink-0"
+        class="relative size-[150px] md:size-[250px] rounded-lg overflow-hidden shrink-0"
       >
-        <img
+        <NuxtImg
           :src="item.src"
           :alt="item.title"
+          format="webp"
           class="absolute inset-0 w-full h-full object-cover"
-        >
+        />
       </div>
     </UMarquee>
   </UPageSection>
