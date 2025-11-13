@@ -1,7 +1,18 @@
 <script setup lang="ts">
-const props = defineProps<{ isAdmin?: boolean; limit?: number }>()
+type Props = {
+  isAdmin?: boolean;
+  limit?: number
+}
+
+const props = defineProps<Props>()
+
 const { data, isLoading } = useFetchArticles(props.isAdmin, props.limit)
 const posts = computed(() => data.value || [])
+
+const emptyDesc = computed(() => {
+  return props.isAdmin ? "You have not created any article yet."
+    : "It looks like there isn't any new to read about now. Come back soon!"
+})
 </script>
 
 <template>
@@ -11,5 +22,14 @@ const posts = computed(() => data.value || [])
     </UPageGrid>
 
     <UBlogPosts v-else-if="posts.length" :posts="posts" />
+
+    <UEmpty
+      v-else
+      icon="lucide:newspaper"
+      title="No articles found"
+      :description="emptyDesc"
+      :size="isAdmin ? 'md' : 'xl'"
+      :variant="isAdmin ? 'outline' : 'naked'"
+    />
   </div>
 </template>
