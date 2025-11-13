@@ -1,31 +1,29 @@
 
 export const useFetchArticles = (admin: boolean, limit = 10) => {
   const { $orpc } = useNuxtApp()
-  const { data, ...rest } = useQuery($orpc.articles.list.queryOptions({ input: { limit } }))
-
-  const urlPrefix = admin ? '/admin' : ''
-
-  const posts = computed(() => {
-    if(!data.value) return []
-    return data.value.map((curr) => ({
-      ...curr,
-      image: curr.coverImgUrl,
-      to: `${urlPrefix}/articles/${admin ? curr.id : curr.slug}`,
-      author: [{ name: curr.author }]
-    }))
-  })
-
-  return { posts, ...rest }
+  return useQuery(computed(() => $orpc.articles.list.queryOptions({
+    input: { limit },
+    select(data) {
+      const urlPrefix = admin ? '/admin' : ''
+      return data.map((curr) => ({
+        title: curr.title,
+        description: curr.description,
+        image: "/cdn/" + curr.coverImgUrl,
+        to: `${urlPrefix}/articles/${admin ? curr.id : curr.slug}`,
+        author: [{ name: curr.author }]
+      }))
+    }
+  })))
 }
 
 export const useFetchArticleById = (id: string) => {
   const { $orpc } = useNuxtApp()
-  return useQuery($orpc.articles.findById.queryOptions({ input: { id } }))
+  return useQuery(computed(() => $orpc.articles.findById.queryOptions({ input: { id } })))
 }
 
 export const useFetchArticleBySlug = (slug: string) => {
   const { $orpc } = useNuxtApp()
-  return useQuery($orpc.articles.findBySlug.queryOptions({ input: { slug } }))
+  return useQuery(computed(() => $orpc.articles.findBySlug.queryOptions({ input: { slug } })))
 }
 
 export const useCreateArticle = () => {

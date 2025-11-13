@@ -38,22 +38,14 @@ export default defineNuxtConfig({
     public: { siteUrl: process.env.NUXT_PUBLIC_APP_URL }
   },
 
-  routeRules: { "/admin/**": { ssr: false, static: true } },
+  routeRules: { "/admin/**": { ssr: false, static: true }, '/cdn/**': { ssr: false } },
 
-  image: { quality: 80, format: ['webp','jpeg'] },
-
-  $development: {
-    image: {
-      provider: "local",
-      providers: {
-        local: {
-          name: 'local',
-          provider: '~/lib/img-provider.ts',
-          options: {
-            baseURL: '/cdn/images'
-          }
-        }
-      }
+  image: {
+    quality: 80,
+    format: ['webp'],
+    domains: ['localhost:3000'],
+    alias: {
+      cdn: 'http://localhost:3000/cdn',
     },
-  }
+  },
 })
