@@ -38,22 +38,20 @@ const partnerLogos = [
       <div class="hidden md:block">
         <NuxtImg
           src="/images/landing-image-grid.png"
+          :preload="{ fetchPriority: 'high' }"
           alt="Landing Image"
-          format="webp"
           placeholder
           width="450"
-          preload
         />
       </div>
 
       <div class="md:hidden">
         <NuxtImg
           src="/images/landing-img-mobile.png"
+          :preload="{ fetchPriority: 'high' }"
           alt="Landing Image"
-          format="webp"
           placeholder
           width="450"
-          preload
         />
       </div>
     </div>
@@ -72,7 +70,7 @@ const partnerLogos = [
         </div>
         <!-- Sponsor Logos -->
         <div class="w-max flex items-center gap-7">
-          <img v-for="item in partnerLogos" v-bind="item">
+          <NuxtImg v-for="item in partnerLogos" v-bind="item" />
         </div>
       </div>
     </template>

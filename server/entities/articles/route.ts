@@ -23,7 +23,6 @@ const os = implement(contract)
 
 // list out all articles
 const list = os.list.handler(async ({ input }) => {
-  
   return await useDB().select().from(articles)
     .orderBy(desc(articles.date))
     .limit(input.limit || 10)
@@ -89,11 +88,21 @@ const findBySlug = os.findBySlug.handler(async ({ input, errors }) => {
   if (!article) { throw errors.NOT_FOUND() }
 
   // Find 3 other articles (excluding the current one)
-  const related = await db.query.articles.findMany({
+  const getRelated = await db.query.articles.findMany({
     where: ne(articles.slug, input.slug),
     limit: 3,
     orderBy: desc(articles.date)
   })
+
+  const related = getRelated.map((curr) => ({
+    title: curr.title,
+    description: curr.description,
+    date: curr.date,
+    slug: curr.slug,
+    author: [{ name: curr.author }],
+    image: "/cdn/" + curr.coverImgUrl,
+    to: `/articles/${curr.slug}`
+  }))
 
   return { article, related }
 })

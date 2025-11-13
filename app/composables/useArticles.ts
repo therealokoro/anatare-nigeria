@@ -1,4 +1,3 @@
-
 export const useFetchArticles = (admin: boolean, limit = 10) => {
   const { $orpc } = useNuxtApp()
   return useQuery(computed(() => $orpc.articles.list.queryOptions({
@@ -23,7 +22,13 @@ export const useFetchArticleById = (id: string) => {
 
 export const useFetchArticleBySlug = (slug: string) => {
   const { $orpc } = useNuxtApp()
-  return useQuery(computed(() => $orpc.articles.findBySlug.queryOptions({ input: { slug } })))
+  return useQuery(computed(() => $orpc.articles.findBySlug.queryOptions({
+    input: { slug },
+    select({ article, related }) {
+      return { related, article: { ...article, coverImgUrl: "/cdn/" + article.coverImgUrl } }
+    },
+    retry: false
+  })))
 }
 
 export const useCreateArticle = () => {

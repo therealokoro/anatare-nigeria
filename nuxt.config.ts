@@ -38,7 +38,10 @@ export default defineNuxtConfig({
     public: { siteUrl: process.env.NUXT_PUBLIC_APP_URL }
   },
 
-  routeRules: { "/admin/**": { ssr: false, static: true }, '/cdn/**': { ssr: false } },
+  routeRules: {
+    '/articles/**': { ssr: false, static: true },
+    "/admin/**": {ssr: false, static: true },
+    '/cdn/**': { ssr: false } },
 
   image: {
     quality: 80,

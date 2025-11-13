@@ -1,7 +1,8 @@
 <script setup lang="ts">
-const id = useRoute("admin-articles-id").params.id as string
+import { isDefinedError } from '@orpc/client'
+const id = useRoute("admin-articles-id").params.id
 
-const { data: article, error, isLoading } = useFetchArticleById(id)
+const { data: article, error, status } = useFetchArticleById(id)
 
 const currErr = ref<{ message: string; name: string }|null>(null);
 
@@ -17,7 +18,7 @@ const formState = computed(() => ({
 // ✅ Watch reactively to handle query results
 watchEffect(() => {
   // Handle oRPC or network errors
-  if (isDefined(error.value)) {
+  if (isDefinedError(error.value)) {
     currErr.value = {
       message: error.value.message,
       name: error.value.name
@@ -40,7 +41,7 @@ function initDeleteArticle() {
 </script>
 
 <template>
-  <DashboardPage title="Update Article" :error="currErr" :loading="isLoading">
+  <DashboardPage title="Update Article" :error="currErr" :status>
     <UModal v-bind:open="openDeleteModal" title="Confirm Action">
       <UButton label="Delete Article" @click="openDeleteModal = true" icon="lucide:x" class="mb-5" color="error" />
 

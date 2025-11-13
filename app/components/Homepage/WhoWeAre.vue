@@ -7,8 +7,7 @@
           src="/images/smiling-kids.jpg"
           alt="Smiling Young Boy"
           class="w-full h-full object-cover object-[60%,50%]"
-          format="webp"
-          preload
+          :preload="{ fetchPriority: 'high' }"
           placeholder
         />
       </div>

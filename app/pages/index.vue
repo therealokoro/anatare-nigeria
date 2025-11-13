@@ -12,18 +12,20 @@ useHead({ title: "Homepage" })
     <HomepageWhoWeAre />
 
     <!-- Our Mission -->
-    <HomepageMission />
+    <LazyHomepageMission />
 
     <!-- Strategies -->
-    <HomepageStrategies />
+    <LazyHomepageStrategies />
 
     <!-- News -->
-    <HomepageNews />
+    <LazyUPageSection title="Blog Posts" :ui="{ container: 'mx-auto' }">
+      <LazyArticleGrid :limit="3" />
+    </LazyUPageSection>
 
     <!-- Gallery SlideShpw -->
-    <HomepageSlideShow />
+    <LazyHomepageSlideShow />
 
     <!-- Donations -->
-    <HomepageDonation />
+    <LazyHomepageDonation />
   </Page>
 </template>

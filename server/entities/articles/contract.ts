@@ -2,6 +2,12 @@ import { oc } from "@orpc/contract"
 import { type } from 'arktype';
 import { ArticleSchema, CreateArticleSchema, UpdateArticleSchema } from "~~/server/database/schema/articles"
 
+const OutputArticleSchema = ArticleSchema.omit("content", "id", "coverImgUrl", "author").and({
+  to: "string",
+  image: "string",
+  author: type({ name: 'string' }).array()
+})
+
 export const contract = {
   create: oc.input(CreateArticleSchema)
     .output(ArticleSchema)
@@ -35,7 +41,7 @@ export const contract = {
     .input(ArticleSchema.pick("slug"))
     .output(type({
       article: ArticleSchema,
-      related: ArticleSchema.array().atMostLength(3)
+      related: OutputArticleSchema.array()
     }))
     .errors({
       NOT_FOUND: { message: "The article you're looking for was not found" },

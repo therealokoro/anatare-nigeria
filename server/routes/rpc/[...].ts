@@ -1,12 +1,13 @@
 import { onError } from '@orpc/server'
 import { RPCHandler } from '@orpc/server/fetch'
-import { orpcRouter } from '~~/server/utils/orpc.router';
+import { orpcRouter } from '~~/server/utils/orpc';
 import { BatchHandlerPlugin } from '@orpc/server/plugins'
 
 const rpcHandler = new RPCHandler(orpcRouter, {
   interceptors: [
     onError((error) => {
       console.error(error)
+      // Handle other oRPC errors
     }),
   ],
   plugins: [

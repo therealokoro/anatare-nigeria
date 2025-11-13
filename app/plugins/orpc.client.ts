@@ -1,7 +1,7 @@
 import type { RouterClient } from '@orpc/server'
 import { createORPCClient } from '@orpc/client'
 import { RPCLink } from '@orpc/client/fetch'
-import type { orpcRouter } from '~~/server/utils/orpc.router'
+import type { orpcRouter } from '~~/server/utils/orpc'
 import { createTanstackQueryUtils } from '@orpc/tanstack-query'
 import { BatchLinkPlugin } from '@orpc/client/plugins'
 

@@ -1,7 +1,3 @@
-<script setup lang="ts">
-const { posts } = useFetchArticles(false)
-</script>
-
 <template>
   <Page
     contain
@@ -9,6 +5,6 @@ const { posts } = useFetchArticles(false)
     title="Articles"
     description="Read some of our latest articles and blog posts"
   >
-    <UBlogPosts :posts="posts" />
+    <ArticleGrid />
   </Page>
 </template>

@@ -13,7 +13,6 @@ const { images } = useGallery()
         <NuxtImg
           :src="item.src"
           :alt="item.title"
-          format="webp"
           class="absolute inset-0 w-full h-full object-cover"
         />
       </div>
