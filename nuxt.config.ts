@@ -1,6 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-// import { env } from './shared/utils/env';
-
 export default defineNuxtConfig({
   modules: [
     "@nuxt/ui",
@@ -21,21 +18,28 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
+
   css: ["~/assets/css/main.css"],
+
   ui: { colorMode: false },
+
   compatibilityDate: "latest",
+
   hub: { kv: true, database: true, blob: true },
+
   eslint: { config: { stylistic: true, standalone: false } },
+
   nuxtQuery: { autoImports: true, devtools: false },
+
   nitro: { experimental: { tasks: true, openAPI: true } },
+
   experimental: { typedPages: true },
 
   vite: { optimizeDeps: { exclude: ['@tanstack/vue-query-devtools'] } },
 
   runtimeConfig: {
     adminEmail: process.env.ADMIN_EMAIl,
-    adminPass: process.env.ADMIN_PASS,  
-    public: { siteUrl: process.env.NUXT_PUBLIC_APP_URL }
+    adminPass: process.env.ADMIN_PASS,
   },
 
   routeRules: {
@@ -46,9 +50,9 @@ export default defineNuxtConfig({
   image: {
     quality: 80,
     format: ['webp'],
-    domains: ['localhost:3000'],
+    domains: [process.env.NUXT_PUBLIC_APP_URL ?? ''],
     alias: {
-      cdn: 'http://localhost:3000/cdn',
+      cdn: `${process.env.NUXT_PUBLIC_APP_URL}/cdn`,
     },
   },
 })
