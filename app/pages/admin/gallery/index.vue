@@ -3,12 +3,11 @@ const { data, error, status, suspense } = useFetchAlbums(true)
 await suspense()
 
 const albums = computed(() => data.value || [])
-const { mutate: createAlbum, isPending } = useCreateAlbum()
+const { mutateAsync: createAlbum, isPending } = useCreateAlbum()
 
 const albumModal = ref(false)
-
-function triggerCreateAlbum(data: any){
-  createAlbum(data)
+async function triggerCreateAlbum(data: any){
+  await createAlbum(data)
   albumModal.value = false
 }
 </script>
