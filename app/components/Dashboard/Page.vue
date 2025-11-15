@@ -25,7 +25,6 @@ useSeoMeta({ title, description })
         :ui="{ root: 'min-h-[300px]' }"
         redirect="/admin"
         :error="{
-          statusCode: 404,
           statusMessage: error?.name,
           message: error?.message
         }"
