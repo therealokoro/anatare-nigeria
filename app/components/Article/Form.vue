@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['submit'])
-const buttonIsLoading = defineModel("loading", { default: false })
+const btnIsLoading = defineModel("loading", { default: false })
 
 const errorMessages = {
   title: 'Please provide a name',
@@ -74,7 +74,7 @@ async function onSubmit(event: any) { emit("submit", event.data) }
         />
       </UFormField>
       
-      <UButton :loading="buttonIsLoading" type="submit" block>{{ mode }} Article</UButton>
+      <UButton :loading="btnIsLoading" type="submit" block>{{ mode }} Article</UButton>
     </div>
   </UForm>
 </template>

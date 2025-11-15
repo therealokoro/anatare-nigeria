@@ -35,14 +35,16 @@ export const useCreateArticle = () => {
   const toast = useToast()
   const { $orpc } = useNuxtApp()
 
-  return useMutation($orpc.articles.create.mutationOptions({
-    onError(error) {
-      toast.add({ title: 'Error', description: error.message, color: 'error' })
-    },
-    onSuccess(){
-      toast.add({ title: 'Success', description: 'Article created and published successfully', color: 'success' })
-      navigateTo("/admin/articles")
-    }
+  return useMutation(computed(() => {
+    return $orpc.articles.create.mutationOptions({
+      onError(error) {
+        toast.add({ title: 'Error', description: error.message, color: 'error' })
+      },
+      onSuccess(){
+        toast.add({ title: 'Success', description: 'Article created and published successfully', color: 'success' })
+        navigateTo("/admin/articles")
+      }
+    })
   }))
 }
 
@@ -51,7 +53,8 @@ export const useUpdateArticle = () => {
   const toast = useToast()
 
   // Update article mutation
-  return useMutation($orpc.articles.update.mutationOptions({
+  return useMutation(computed(() => {
+    return $orpc.articles.update.mutationOptions({
       onError(error) {
         toast.add({ title: "Error", description: error.message, color: "error" })
       },
@@ -64,7 +67,7 @@ export const useUpdateArticle = () => {
         navigateTo("/admin/articles")
       },
     })
-  )
+  }))
 }
 
 export const useDeleteArticle = () => {
@@ -72,18 +75,19 @@ export const useDeleteArticle = () => {
   const toast = useToast()
 
   // Update article mutation
-  return useMutation($orpc.articles.deleteSingle.mutationOptions({
-    onError(error) {
-      toast.add({ title: "Error", description: error.message, color: "error" })
-    },
-    onSuccess() {
-      toast.add({
-        title: "Success",
-        description: "Article was deleted successfully",
-        color: "success",
-      })
-      navigateTo("/admin/articles")
-    },
-  })
-)
+  return useMutation(computed(() => {
+    return $orpc.articles.deleteSingle.mutationOptions({
+      onError(error) {
+        toast.add({ title: "Error", description: error.message, color: "error" })
+      },
+      onSuccess() {
+        toast.add({
+          title: "Success",
+          description: "Article was deleted successfully",
+          color: "success",
+        })
+        navigateTo("/admin/articles")
+      },
+    })
+  }))
 }

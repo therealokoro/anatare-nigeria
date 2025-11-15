@@ -28,6 +28,7 @@
     "@peterbud/nuxt-query": "^1.2.0",
     "@tanstack/vue-query": "^5.90.7",
     "@vueup/vue-quill": "^1.2.0",
+    "@vueuse/core": "^14.0.0",
     "@vueuse/nuxt": "^14.0.0",
     "arkenv": "^0.7.3",
     "arktype": "^2.1.25",
