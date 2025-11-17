@@ -1,6 +1,6 @@
 import { kebabCase } from 'string-ts'
 import { implement, ORPCError } from "@orpc/server"
-import { contract } from "./contract"
+import { contract, MAX_IMAGE_LENGTH } from "./contract"
 import { albums } from "~~/server/database/schema"
 import { useDB } from '../../utils/db'
 
@@ -37,6 +37,9 @@ const create = os.create.handler(async ({ input, errors }) => {
   
   const { title } = input
   const slug = kebabCase(title)
+
+  if(input.images.length > MAX_IMAGE_LENGTH){ throw errors.MAX_IMAGE_LENGTH() }
+
   const images = await handleUploadImage(input.images, slug)
   if(!images.length){ throw errors.NO_IMAGE() }
 
@@ -76,6 +79,8 @@ const update = os.update.handler(async ({ input, errors }) => {
 
   const { title, removed } = input
   const slug = kebabCase(title)
+
+  if(currentAlbum.images.length + input.images.length > MAX_IMAGE_LENGTH){ throw errors.MAX_IMAGE_LENGTH() }
 
   // upload new images
   let uploadedImgs = await handleUploadImage(input.images, slug)

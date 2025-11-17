@@ -2,6 +2,7 @@
 import { type } from 'arktype'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import type { HTMLAttributes } from 'vue'
+import { MAX_IMAGE_LENGTH } from '~~/server/entities/albums/contract';
 
 const props = defineProps<{
   initial?: { title?: string, images?: File[] }
@@ -13,7 +14,7 @@ const btnIsLoading = defineModel("loading", { default: false })
 const reset = defineModel("reset", { default: false })
 const emit = defineEmits(['submit'])
 
-const MAX_FILES = 5
+const MAX_FILES = MAX_IMAGE_LENGTH
 const MAX_FILE_SIZE = 1 * 1024 * 1024 // 1MB
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 
@@ -63,7 +64,7 @@ const rootStyles = tv({ base: 'space-y-4 p-5' })
 </script>
 
 <template>
-  <UForm :schema="schema" :state="state" :class="rootStyles({ class: props.class })" @submit="onSubmit">
+  <UForm :schema :state :class="rootStyles({ class: props.class })" @submit="onSubmit">
     <UFormField 
       name="title" 
       label="Album Title" 
@@ -78,11 +79,12 @@ const rootStyles = tv({ base: 'space-y-4 p-5' })
       :help="`Select up to ${MAX_FILES} images. JPG, PNG or WebP (max. 1MB each).`"
     >
       <UFileUpload
-        v-model="state.images" 
-        accept="image/*"
         multiple
+        position="inside"
         layout="list"
-        class="min-h-48"
+        accept="image/*"
+        class="min-h-60"
+        v-model="state.images" 
         description="PNG, JPG or JPEG (max. 1MB)"
       />
     </UFormField>

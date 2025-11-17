@@ -18,7 +18,7 @@ const images = computed(() => data.value?.images || [])
 const displayImages = ref(images.value)
 const imageDeleteList = ref<string[]>([])
 
-const { data: newAlbumInfo, mutate: updateAlbum, isPending, isSuccess } = useUpdateAlbum()
+const { data: newAlbumInfo, mutateAsync: updateAlbum, isPending, isSuccess } = useUpdateAlbum()
 const deleteMutation = useDeleteAlbum()
 
 watch(error, (err) => {
@@ -33,7 +33,8 @@ watch(newAlbumInfo, (info) => {
 })
 
 async function handleUpdateAlbum(data: any) {
-  updateAlbum({ id: albumId!, images: data.images, title: data.title, removed: imageDeleteList.value })
+  await updateAlbum({ id: albumId!, images: data.images, title: data.title, removed: imageDeleteList.value })
+  navigateTo("/admin/gallery")
 }
 
 function deleteImage(img: string){
@@ -48,6 +49,7 @@ async function handleDeleteAlbum() {
 
 <template>
   <DashboardPage title="Update Album" :error="_error" :status>
+    <h1 class="text-lg font-bold mb-7">Create a Album</h1>
     <template v-if="album">
       <div class="flex items-center justify-between">
         <h1 class="text-lg font-bold">{{ album.title }} Album</h1>
