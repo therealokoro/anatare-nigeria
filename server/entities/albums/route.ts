@@ -45,10 +45,21 @@ const create = os.create.handler(async ({ input, errors }) => {
   return album[0]
 })
 
-
+// delete a single album
 const deleteSingle = os.deleteSingle.handler(async ({ input, errors }) => {
   const album = await useDB().query.albums.findFirst({ where: eq(albums.id, input.id) })
   if(!album){ throw errors.NOT_FOUND() }
+
+  try {
+    // delete album images first
+    for (let i = 0; i < album.images.length; i++) {
+      const img = album.images[i];
+      await hubBlob().del(img)
+    }
+  } catch (error: any) {
+    throw new ORPCError('INTERNAL_SERVER_ERROR', { message: error.message })
+  }
+  
   const deleted = await useDB().delete(albums).where(eq(albums.id, input.id)).returning()
   return deleted[0]
 })

@@ -18,7 +18,14 @@ const menuLinks = computed<FooterColumn[]>(() => {
       </p>
     </template>
 
-    <UNavigationMenu :ui="{ link: 'text-xs text-current hover:text-primary' }" :items="menuLinks" variant="link" />
+    <UNavigationMenu
+      :ui="{
+        list: 'justify-center flex-wrap',
+        link: 'text-xs text-current hover:text-primary'
+      }"
+      :items="menuLinks"
+      variant="link"
+    />
 
     <template #right>
       <nuxt-link
