@@ -3,6 +3,7 @@ import { implement, ORPCError } from "@orpc/server"
 import { contract, MAX_IMAGE_LENGTH } from "./contract"
 import { albums } from "~~/server/database/schema"
 import { useDB } from '../../utils/db'
+import { nanoid } from "nanoid"
 
 // upload utility function
 async function handleUploadImage(files: File[], slug: string){
@@ -14,7 +15,7 @@ async function handleUploadImage(files: File[], slug: string){
     for (let i = 0; i < files.length; i++) {
       const img = files[i];
       ensureBlob(img, { maxSize: '1MB', types: ['image'] })
-      const blobObj = await hubBlob().put(img.name, img, {
+      const blobObj = await hubBlob().put(nanoid(), img, {
         addRandomSuffix: true,
         prefix: `albums/${slug}`
       })
