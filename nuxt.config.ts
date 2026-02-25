@@ -31,7 +31,7 @@ export default defineNuxtConfig({
 
   ui: { colorMode: false },
 
-  compatibilityDate: "latest",
+  compatibilityDate: "2026-02-25",
 
   hub: { kv: true, db: 'sqlite', blob: true },
 
@@ -39,7 +39,11 @@ export default defineNuxtConfig({
 
   nuxtQuery: { autoImports: true, devtools: false },
 
-  nitro: { experimental: { tasks: true, openAPI: true } },
+  nitro: {
+    preset: "cloudflare_module",
+    cloudflare: { deployConfig: true, nodeCompat: true },
+    experimental: { tasks: true, openAPI: true }
+  },
 
   experimental: { typedPages: true },
 

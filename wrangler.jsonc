@@ -1,0 +1,60 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "anatare-nigeria",
+  "main": "./.output/server/index.mjs",
+  "compatibility_date": "2026-02-25",
+  "assets": {
+    "directory": "./.output/public/",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "r2_buckets": [
+    {
+      "binding": "BLOB",
+      "bucket_name": "anatare-nigeria"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "8abe5eb0-38f9-44b3-9bc2-7c325c09f68c"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "5647fed572854ec0a907087a0856758a"
+    }
+  ],
+  "vars": {
+    "ADMIN_EMAIl": "admin@anatare.org",
+    "ADMIN_PASS": "admin-123",
+    "BETTER_AUTH_SECRET": "utnfmweofuiwevyfoiwejkfopqwjnxjm783gxe7eyb98n1890ue0912",
+    "BETTER_AUTH_URL": "https://anatarenigeria.org",
+    "NUXT_PUBLIC_APP_URL": "https://anatarenigeria.org"
+  },
+  "env": {
+    "preview": {
+      "r2_buckets": [
+        {
+          "binding": "BLOB",
+          "bucket_name": "anatare-nigeria-preview"
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_id": "883b6eb2-1aa1-436c-849f-55f9b5e6a0de"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "KV",
+          "id": "00b6e3eeb7ee4086b49749ac8d9dcdbc"
+        }
+      ]
+    }
+  }
+}
