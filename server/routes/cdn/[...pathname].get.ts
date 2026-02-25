@@ -1,3 +1,5 @@
+import { blob } from '@nuxthub/blob';
+
 export default eventHandler(async (event) => {
   const { pathname } = getRouterParams(event)
 
@@ -9,5 +11,5 @@ export default eventHandler(async (event) => {
   }
 
   setHeader(event, 'Content-Security-Policy', 'default-src \'none\';')
-  return hubBlob().serve(event, pathname)
+  return blob.serve(event, pathname)
 })

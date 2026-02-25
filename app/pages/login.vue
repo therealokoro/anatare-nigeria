@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent, AuthFormField } from "@nuxt/ui"
-definePageMeta({ layout: "auth-page", auth: { only: "guest", redirectUserTo: "/admin" } })
+definePageMeta({ layout: "auth-page" })
 const toast = useToast()
 
 const fields: AuthFormField[] = [{
@@ -29,7 +29,7 @@ type Schema = typeof LoginSchema.infer
 const isLoggingIn = ref(false)
 
 async function onSubmit(payload: FormSubmitEvent<Schema>) {
-  const auth = useAuth()
+  const auth = useUserSession()
   await auth.signIn.email({ ...payload.data, callbackURL: "/admin" }, {
     onError(ctx) { toast.add({ color: "error", description: ctx.error.message }) },
     onRequest(){ isLoggingIn.value = true },

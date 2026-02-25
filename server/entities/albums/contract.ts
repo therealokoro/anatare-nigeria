@@ -1,5 +1,5 @@
 import { oc } from "@orpc/contract"
-import { AlbumSchema, CreateAlbumSchema } from "~~/server/database/schema/albums"
+import { AlbumSchema, CreateAlbumSchema } from "~~/server/db/schema/albums"
 
 export const MAX_IMAGE_LENGTH = 15
 

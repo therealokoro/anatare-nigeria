@@ -5,7 +5,7 @@ function onSelect() {
   open.value = false
 }
 
-const auth = useAuth()
+const auth = useUserSession()
 
 const links = useActiveRouteLink([
   { label: "Overview", icon: "i-lucide-house", to: "/admin", onSelect },
@@ -13,7 +13,17 @@ const links = useActiveRouteLink([
   { label: "Gallery", icon: "i-lucide-image", to: "/admin/gallery", onSelect },
   { label: "Messages", icon: "lucide:message-square-text", to: "/admin/messages", onSelect },
   { label: "Settings", icon: "i-lucide-settings", to: "/admin/#settings", onSelect },
-  { label: "Logout", icon: "i-lucide-log-out", onSelect: () => auth.signOut({ redirectTo: "/login" }) }
+  {
+    label: "Logout",
+    icon: "i-lucide-log-out",
+    onSelect: async () => {
+      await auth.signOut({
+        onSuccess() {
+          navigateTo("/")
+        }
+      })
+    }
+  }
 ], "/admin")
 
 const getRouteName = computed(() => links.value.find(curr => curr.active == true)?.label)

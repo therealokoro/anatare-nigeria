@@ -1,117 +1,108 @@
 import { kebabCase } from 'string-ts'
 import { implement, ORPCError } from "@orpc/server"
 import { contract } from "./contract"
-import { articles } from "~~/server/database/schema"
-import { BlobObject } from '@nuxthub/core'
-import { desc, ne } from 'drizzle-orm'
-import { useDB } from '../../utils/db'
+import { ensureBlob, blob } from '@nuxthub/blob'
+import { articles } from '@nuxthub/db/schema'
+import { db } from '@nuxthub/db'
+import { desc, ne, eq } from 'drizzle-orm'
+import type { BlobObject } from '@nuxthub/core/blob'
 
-// upload utility function
-async function handleUploadImage(file: File){
-  try {
-    ensureBlob(file, { maxSize: '1MB', types: ['image'] })
-    return await hubBlob().put(file.name, file, {
-      addRandomSuffix: true,
-      prefix: 'articles'
-    })
-  } catch (error: any) {
+async function uploadImage(file: File): Promise<BlobObject> {
+  ensureBlob(file, { maxSize: '1MB', types: ['image'] })
+  return await blob.put(file.name, file, {
+    addRandomSuffix: true,
+    prefix: 'articles',
+  }).catch((error) => {
     throw new ORPCError('PAYLOAD_TOO_LARGE', { message: error.message })
-  }
+  })
 }
 
 const os = implement(contract)
 
-// list out all articles
-const list = os.list.handler(async ({ input }) => {
-  return await useDB().select().from(articles)
+const list = os.list.handler(async ({ input }) =>
+  db.select().from(articles)
     .orderBy(desc(articles.date))
-    .limit(input.limit || 10)
-})
+    .limit(input.limit ?? 10)
+)
 
-// Creates a single article
 const create = os.create.handler(async ({ input, errors }) => {
-  const articleExist = await useDB().query.articles.findFirst({ where: eq(articles.title, input.title) })
+  const articleExist = await db.query.articles.findFirst({ where: eq(articles.title, input.title) })
+  if (articleExist) throw errors.CONFLICT()
 
-  if(articleExist){ throw errors.CONFLICT() }
+  if (!input.coverImg?.size) throw errors.NO_IMAGE()
 
-  if (!input.coverImg || !input.coverImg.size) { throw errors.NO_IMAGE() }
+  const { pathname } = await uploadImage(input.coverImg)
 
-  const uploadedImageFile = await handleUploadImage(input.coverImg)
-
-  const article = await useDB().insert(articles).values({
+  const [article] = await db.insert(articles).values({
     ...input,
     slug: kebabCase(input.title),
-    coverImgUrl: uploadedImageFile.pathname
+    coverImgUrl: pathname,
   }).returning()
 
-  return article[0]
+  return article!
 })
 
-// Update a single article
 const update = os.update.handler(async ({ input, errors }) => {
-  const articleExist = await useDB().query.articles.findFirst({
-    where: eq(articles.title, input.body.title)
-  })
+  const [articleExist, currentArticle] = await Promise.all([
+    db.query.articles.findFirst({ where: eq(articles.title, input.body.title) }),
+    db.query.articles.findFirst({ where: eq(articles.id, input.query.id) }),
+  ])
 
-  if(articleExist && input.query.id != articleExist?.id) { throw errors.CONFLICT() }
+  if (!currentArticle) throw errors.NOT_FOUND()
+  if (articleExist && input.query.id !== articleExist.id) throw errors.CONFLICT()
 
-  let uploadedImageFile: BlobObject | null = null
+  const coverImgUrl = input.body.coverImg
+    ? (await uploadImage(input.body.coverImg)).pathname
+    : undefined
 
-  if(input.body.coverImg){
-    const file = input.body.coverImg as File
-    uploadedImageFile = await handleUploadImage(file)
-  }
-
-  const article = await useDB().update(articles).set({
+  const [article] = await db.update(articles).set({
     ...input.body,
     slug: kebabCase(input.body.title),
-    ...(uploadedImageFile && {coverImgUrl: uploadedImageFile.pathname})
+    ...(coverImgUrl && { coverImgUrl }),
   }).where(eq(articles.id, input.query.id)).returning()
 
-  return article[0]
+  return article!
 })
 
-// Fetch a single article
 const findById = os.findById.handler(async ({ input, errors }) => {
-  const article = await useDB().query.articles.findFirst({ where: eq(articles.id, input.id) })
-  if(!article){ throw errors.NOT_FOUND() }
+  const article = await db.query.articles.findFirst({ where: eq(articles.id, input.id) })
+  if (!article) throw errors.NOT_FOUND()
   return article
 })
 
-// Fetch a single article
 const findBySlug = os.findBySlug.handler(async ({ input, errors }) => {
-  const db = useDB()
+  const [article, relatedArticles] = await Promise.all([
+    db.query.articles.findFirst({ where: eq(articles.slug, input.slug) }),
+    db.query.articles.findMany({
+      where: ne(articles.slug, input.slug),
+      limit: 3,
+      orderBy: desc(articles.date),
+    }),
+  ])
 
-  // Find the main article
-  const article = await db.query.articles.findFirst({ where: eq(articles.slug, input.slug) })
+  if (!article) throw errors.NOT_FOUND()
 
-  if (!article) { throw errors.NOT_FOUND() }
-
-  // Find 3 other articles (excluding the current one)
-  const getRelated = await db.query.articles.findMany({
-    where: ne(articles.slug, input.slug),
-    limit: 3,
-    orderBy: desc(articles.date)
-  })
-
-  const related = getRelated.map((curr) => ({
+  const related = relatedArticles.map((curr) => ({
     title: curr.title,
     description: curr.description,
     date: curr.date,
     slug: curr.slug,
     author: [{ name: curr.author }],
-    image: "/cdn/" + curr.coverImgUrl,
-    to: `/articles/${curr.slug}`
+    image: `/cdn/${curr.coverImgUrl}`,
+    to: `/articles/${curr.slug}`,
   }))
 
   return { article, related }
 })
 
-
 const deleteSingle = os.deleteSingle.handler(async ({ input, errors }) => {
-  const article = await useDB().query.articles.findFirst({ where: eq(articles.id, input.id) })
-  if(!article){ throw errors.NOT_FOUND() }
-  await useDB().delete(articles).where(eq(articles.id, input.id))
+  const article = await db.query.articles.findFirst({ where: eq(articles.id, input.id) })
+  if (!article) throw errors.NOT_FOUND()
+
+  await Promise.all([
+    blob.del(article.coverImgUrl),
+    db.delete(articles).where(eq(articles.id, input.id)),
+  ])
 })
 
 export const articlesRouter = os.router({
@@ -120,5 +111,5 @@ export const articlesRouter = os.router({
   list,
   findById,
   findBySlug,
-  deleteSingle
+  deleteSingle,
 })

@@ -1,1 +1,1 @@
-export type { IArticle } from "~~/server/database/schema/articles"
+export type { IArticle } from "~~/server/db/schema/articles"

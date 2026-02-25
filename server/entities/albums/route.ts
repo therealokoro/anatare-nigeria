@@ -1,131 +1,106 @@
 import { kebabCase } from 'string-ts'
 import { implement, ORPCError } from "@orpc/server"
 import { contract, MAX_IMAGE_LENGTH } from "./contract"
-import { albums } from "~~/server/database/schema"
-import { useDB } from '../../utils/db'
+import { ensureBlob, blob } from '@nuxthub/blob'
+import { albums } from '@nuxthub/db/schema'
+import { db } from '@nuxthub/db'
+import { eq } from 'drizzle-orm'
 import { nanoid } from "nanoid"
 
-// upload utility function
-async function handleUploadImage(files: File[], slug: string){
-  if(!files.length) return []
+async function uploadImages(files: File[], slug: string): Promise<string[]> {
+  if (!files.length) return []
 
-  const pathList: string[] = []
-
-  try {
-    for (let i = 0; i < files.length; i++) {
-      const img = files[i];
-      ensureBlob(img, { maxSize: '1MB', types: ['image'] })
-      const blobObj = await hubBlob().put(nanoid(), img, {
+  const uploads = await Promise.all(
+    files.map(async (file) => {
+      ensureBlob(file as Blob, { maxSize: '1MB', types: ['image'] })
+      const blobObj = await blob.put(nanoid(), file as Blob, {
         addRandomSuffix: true,
-        prefix: `albums/${slug}`
+        prefix: `albums/${slug}`,
       })
-      pathList.push(blobObj.pathname)
-    }
-    
-    return pathList
-  } catch (error: any) {
-    throw new ORPCError('PAYLOAD_TOO_LARGE', { message: error.message })
-  }
+      return blobObj.pathname
+    })
+  )
+
+  return uploads
+}
+
+async function deleteImages(images: string[]): Promise<void> {
+  await Promise.all(images.map((img) => blob.del(img)))
 }
 
 const os = implement(contract)
 
-// Creates a single album
 const create = os.create.handler(async ({ input, errors }) => {
-  const albumExist = await useDB().query.albums.findFirst({ where: eq(albums.title, input.title) })
+  const albumExist = await db.query.albums.findFirst({ where: eq(albums.title, input.title) })
+  if (albumExist) throw errors.CONFLICT()
 
-  if(albumExist){ throw errors.CONFLICT() }
-  
-  const { title } = input
-  const slug = kebabCase(title)
+  if (input.images.length > MAX_IMAGE_LENGTH) throw errors.MAX_IMAGE_LENGTH()
 
-  if(input.images.length > MAX_IMAGE_LENGTH){ throw errors.MAX_IMAGE_LENGTH() }
+  const slug = kebabCase(input.title)
+  const images = await uploadImages(input.images, slug)
+  if (!images.length) throw errors.NO_IMAGE()
 
-  const images = await handleUploadImage(input.images, slug)
-  if(!images.length){ throw errors.NO_IMAGE() }
-
-  const album = await useDB().insert(albums).values({ slug, images, title }).returning()
-
-  return album[0]
+  const [album] = await db.insert(albums).values({ slug, images, title: input.title }).returning()
+  return album!
 })
 
-// delete a single album
 const deleteSingle = os.deleteSingle.handler(async ({ input, errors }) => {
-  const album = await useDB().query.albums.findFirst({ where: eq(albums.id, input.id) })
-  if(!album){ throw errors.NOT_FOUND() }
+  const album = await db.query.albums.findFirst({ where: eq(albums.id, input.id) })
+  if (!album) throw errors.NOT_FOUND()
 
-  try {
-    // delete album images first
-    for (let i = 0; i < album.images.length; i++) {
-      const img = album.images[i];
-      await hubBlob().del(img)
-    }
-  } catch (error: any) {
+  await deleteImages(album.images as string[]).catch((error) => {
     throw new ORPCError('INTERNAL_SERVER_ERROR', { message: error.message })
-  }
-  
-  const deleted = await useDB().delete(albums).where(eq(albums.id, input.id)).returning()
-  return deleted[0]
+  })
+
+  const [deleted] = await db.delete(albums).where(eq(albums.id, input.id)).returning()
+  return deleted!
 })
 
-// Creates a single album
 const update = os.update.handler(async ({ input, errors }) => {
-  // Check if album exists
-  const albumExist = await useDB().query.albums.findFirst({ where: eq(albums.title, input.title)})
-  if(albumExist && input.id != albumExist?.id) { throw errors.CONFLICT() }
+  const [albumExist, currentAlbum] = await Promise.all([
+    db.query.albums.findFirst({ where: eq(albums.title, input.title) }),
+    db.query.albums.findFirst({ where: eq(albums.id, input.id) }),
+  ])
 
-  // Get the current album being updated
-  const currentAlbum = await useDB().query.albums.findFirst({ where: eq(albums.id, input.id) })
-  if(!currentAlbum) { throw errors.NOT_FOUND() }
+  if (!currentAlbum) throw errors.NOT_FOUND()
+  if (albumExist && input.id !== albumExist.id) throw errors.CONFLICT()
+  if (currentAlbum.images.length + input.images.length > MAX_IMAGE_LENGTH) throw errors.MAX_IMAGE_LENGTH()
 
-  const { title, removed } = input
-  const slug = kebabCase(title)
+  const slug = kebabCase(input.title)
+  const newImages = await uploadImages(input.images, slug)
+  const prevImages = (currentAlbum.images as string[]) ?? []
 
-  if(currentAlbum.images.length + input.images.length > MAX_IMAGE_LENGTH){ throw errors.MAX_IMAGE_LENGTH() }
+  const retained = input.removed?.length
+    ? prevImages.filter((img) => !input.removed!.includes(img))
+    : prevImages
 
-  // upload new images
-  let uploadedImgs = await handleUploadImage(input.images, slug)
-  // store old images
-  const prevImgList = currentAlbum.images || []
-
-  // if remove list isn't empty, delete images in the list
-  if(removed && removed.length){
-    for (let i = 0; i < removed.length; i++) {
-      const img = removed[i];
-      await hubBlob().delete(img)
-    }
-    const newImgList = prevImgList.filter(curr => !removed.includes(curr))
-    uploadedImgs = [...uploadedImgs, ...newImgList]
-  } else {
-    // Keep existing images if no removals
-    uploadedImgs = [...uploadedImgs, ...prevImgList]
+  if (input.removed?.length) {
+    await deleteImages(input.removed)
   }
 
-  if(!uploadedImgs.length){ throw errors.NO_IMAGE() }
+  const finalImages = [...newImages, ...retained]
+  if (!finalImages.length) throw errors.NO_IMAGE()
 
-  const album = await useDB().update(albums).set({
-    title,
-    slug,
-    images: uploadedImgs
-  }).where(eq(albums.id, input.id)).returning()
+  const [album] = await db
+    .update(albums)
+    .set({ title: input.title, slug, images: finalImages })
+    .where(eq(albums.id, input.id))
+    .returning()
 
-  return album[0]
+  return album!
 })
 
-// List all albums
-const list = os.list.handler(async () => await useDB().select().from(albums))
+const list = os.list.handler(async () => await db.select().from(albums))
 
-// Fetch a single album
 const findById = os.findById.handler(async ({ input, errors }) => {
-  const album = await useDB().query.albums.findFirst({ where: eq(albums.id, input.id) })
-  if(!album){ throw errors.NOT_FOUND() }
+  const album = await db.query.albums.findFirst({ where: eq(albums.id, input.id) })
+  if (!album) throw errors.NOT_FOUND()
   return album
 })
 
-// Fetch a single album
 const findBySlug = os.findBySlug.handler(async ({ input, errors }) => {
-  const album = await useDB().query.albums.findFirst({ where: eq(albums.slug, input.slug) })
-  if(!album){ throw errors.NOT_FOUND() }
+  const album = await db.query.albums.findFirst({ where: eq(albums.slug, input.slug) })
+  if (!album) throw errors.NOT_FOUND()
   return album
 })
 
@@ -135,5 +110,5 @@ export const albumsRouter = os.router({
   update,
   findById,
   findBySlug,
-  deleteSingle
+  deleteSingle,
 })

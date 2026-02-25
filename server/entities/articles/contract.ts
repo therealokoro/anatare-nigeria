@@ -1,6 +1,6 @@
 import { oc } from "@orpc/contract"
 import { type } from 'arktype';
-import { ArticleSchema, CreateArticleSchema, UpdateArticleSchema } from "~~/server/database/schema/articles"
+import { ArticleSchema, CreateArticleSchema, UpdateArticleSchema } from "~~/server/db/schema/articles"
 
 const OutputArticleSchema = ArticleSchema.omit("content", "id", "coverImgUrl", "author").and({
   to: "string",
@@ -24,7 +24,8 @@ export const contract = {
     .output(ArticleSchema)
     .errors({
       CONFLICT: { message: "An article already exists with this name" },
-      NO_IMAGE: { message: "No image file was uploaded" }
+      NO_IMAGE: { message: "No image file was uploaded" },
+      NOT_FOUND: { message: "The article you're looking for was not found" }
     }),
 
   list: oc.input(type({ "limit?": "number" }))
