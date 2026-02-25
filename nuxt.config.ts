@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxthub/core",
     '@nuxt/devtools',
-    '@peterbud/nuxt-query'
+    '@peterbud/nuxt-query',
+    "@onmax/nuxt-better-auth",
   ],
 
   imports: {
@@ -17,6 +18,13 @@ export default defineNuxtConfig({
     ]
   },
 
+  auth: {
+    redirects: { login: '/login', guest: '/' },
+    serverConfig: './configs/auth.server',
+    clientConfig: './configs/auth.client',
+    hubSecondaryStorage: true
+  },
+
   devtools: { enabled: true },
 
   css: ["~/assets/css/main.css"],
@@ -25,7 +33,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: "latest",
 
-  hub: { kv: true, database: true, blob: true },
+  hub: { kv: true, db: 'sqlite', blob: true },
 
   eslint: { config: { stylistic: true, standalone: false } },
 
@@ -44,15 +52,13 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/articles/**': { ssr: false, static: true },
-    "/admin/**": {ssr: false, static: true },
-    '/cdn/**': { ssr: false } },
-
-  image: {
-    quality: 80,
-    format: ['webp'],
-    domains: [process.env.NUXT_PUBLIC_APP_URL ?? ''],
-    alias: {
-      cdn: `${process.env.NUXT_PUBLIC_APP_URL}/cdn`,
-    },
+    "/admin/**": { ssr: false, static: true },
+    '/cdn/**': { ssr: false }
   },
+
+  image: { quality: 80, format: ['webp'], provider: "none" },
+
+  $production: {
+    image: { provider: "cloudflare" }
+  }
 })

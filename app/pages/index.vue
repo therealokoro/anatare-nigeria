@@ -18,9 +18,9 @@ useHead({ title: "Homepage" })
     <LazyHomepageStrategies />
 
     <!-- News -->
-    <LazyUPageSection title="Blog Posts" :ui="{ container: 'mx-auto' }">
-      <LazyArticleGrid :limit="3" />
-    </LazyUPageSection>
+    <UPageSection title="Blog Posts" :ui="{ container: 'mx-auto' }">
+      <ArticleGrid :limit="3" />
+    </UPageSection>
 
     <!-- Gallery SlideShpw -->
     <LazyHomepageSlideShow />
