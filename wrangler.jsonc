@@ -32,8 +32,7 @@
     "ADMIN_EMAIl": "admin@anatare.org",
     "ADMIN_PASS": "admin-123",
     "BETTER_AUTH_SECRET": "utnfmweofuiwevyfoiwejkfopqwjnxjm783gxe7eyb98n1890ue0912",
-    "BETTER_AUTH_URL": "https://anatarenigeria.org",
-    "NUXT_PUBLIC_APP_URL": "https://anatarenigeria.org"
+    "NUXT_BETTER_AUTH_SECRET": "utnfmweofuiwevyfoiwejkfopqwjnxjm783gxe7eyb98n1890ue0912"
   },
   "env": {
     "preview": {
