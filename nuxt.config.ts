@@ -33,7 +33,16 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2026-02-25",
 
-  hub: { kv: true, db: 'sqlite', blob: true },
+  hub: {
+    kv: true,
+    blob: true,
+    db: {
+      dialect: 'sqlite',
+      driver: 'd1',
+      connection: { databaseId: '8abe5eb0-38f9-44b3-9bc2-7c325c09f68c' },
+      applyMigrationsDuringBuild: false
+    }
+  },
 
   eslint: { config: { stylistic: true, standalone: false } },
 

@@ -19,7 +19,9 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_id": "8abe5eb0-38f9-44b3-9bc2-7c325c09f68c"
+      "database_id": "8abe5eb0-38f9-44b3-9bc2-7c325c09f68c",
+      "migrations_table": "_hub_migrations",
+      "migrations_dir": ".output/server/db/migrations/sqlite/"
     }
   ],
   "kv_namespaces": [
