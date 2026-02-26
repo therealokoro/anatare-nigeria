@@ -31,8 +31,7 @@
   "vars": {
     "ADMIN_EMAIl": "admin@anatare.org",
     "ADMIN_PASS": "admin-123",
-    "BETTER_AUTH_SECRET": "utnfmweofuiwevyfoiwejkfopqwjnxjm783gxe7eyb98n1890ue0912",
-    "NUXT_BETTER_AUTH_SECRET": "utnfmweofuiwevyfoiwejkfopqwjnxjm783gxe7eyb98n1890ue0912"
+    "NUXT_BETTER_AUTH_SECRET": "utnfmweofuiwevyfoiwejkfopqwjnxjm783gxe7eyb98n1890ue0912",
   },
   "env": {
     "preview": {

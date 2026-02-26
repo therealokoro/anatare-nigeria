@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 export const useCreateAlbum = () => {  
   const toast = useToast()
   const { $orpc } = useNuxtApp()
@@ -21,7 +23,7 @@ export const useFetchAlbumImages = () => {
   return useQuery(computed(() => $orpc.albums.list.queryOptions({
     select(data) {
       return data.map((curr) => ({
-        id: useId(),
+        id: nanoid(),
         title: curr.title,
         images: curr.images.map(curr => "/cdn/" + curr)
       }))
