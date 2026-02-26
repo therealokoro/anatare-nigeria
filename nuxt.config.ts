@@ -39,7 +39,6 @@ export default defineNuxtConfig({
     db: {
       dialect: 'sqlite',
       driver: 'd1',
-      connection: { databaseId: '8abe5eb0-38f9-44b3-9bc2-7c325c09f68c' },
       applyMigrationsDuringBuild: false
     }
   },
