@@ -1,0 +1,4 @@
+- name: Run migrations
+  run: npx nuxt db migrate
+  env:
+    NUXT_HUB_PROJECT_KEY: ${{ secrets.NUXTHUB_PROJECT_KEY }}
