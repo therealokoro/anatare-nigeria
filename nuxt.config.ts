@@ -60,6 +60,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     adminEmail: process.env.ADMIN_EMAIl,
     adminPass: process.env.ADMIN_PASS,
+    betterAuthSecret: '',
   },
 
   routeRules: {
