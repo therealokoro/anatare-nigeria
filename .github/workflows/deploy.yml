@@ -27,11 +27,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Check secret
+        run: |
+          if [ -z "$BETTER_AUTH_SECRET" ]; then
+            echo "BETTER_AUTH_SECRET is EMPTY"
+          else
+            echo "BETTER_AUTH_SECRET is SET"
+          fi
+          if [ -z "$NUXT_BETTER_AUTH_SECRET" ]; then
+            echo "NUXT_BETTER_AUTH_SECRET is EMPTY"
+          else
+            echo "NUXT_BETTER_AUTH_SECRET is SET"
+          fi
+        env:
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
+
       - name: Build (needed for migration files)
         run: pnpm build
         env:
-          NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
 
       - name: Apply D1 Migrations
         run: npx wrangler d1 migrations apply anatare-nigeria --remote
@@ -69,11 +85,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Check secret
+        run: |
+          if [ -z "$BETTER_AUTH_SECRET" ]; then
+            echo "BETTER_AUTH_SECRET is EMPTY"
+          else
+            echo "BETTER_AUTH_SECRET is SET"
+          fi
+          if [ -z "$NUXT_BETTER_AUTH_SECRET" ]; then
+            echo "NUXT_BETTER_AUTH_SECRET is EMPTY"
+          else
+            echo "NUXT_BETTER_AUTH_SECRET is SET"
+          fi
+        env:
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
+
       - name: Build
         run: pnpm build
         env:
-          NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
           BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
 
       - name: Deploy
         run: npx wrangler deploy
