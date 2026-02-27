@@ -81,4 +81,4 @@ jobs:
 
       - name: Run DB seed task
         run: |
-          curl -f -X POST "https://anatarenigeria.org/api/auth/seed"
+          curl -f -X GET "https://anatarenigeria.org/api/auth/seed"
