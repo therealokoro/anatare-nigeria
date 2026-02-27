@@ -1,5 +1,7 @@
-import { seedCommand } from "~~/server/tasks/seed"
+export default eventHandler(async (event) => {
+  // IMPORTANT: Authenticate user and validate payload!
+  const payload = { ...getQuery(event) };
+  const { result } = await runTask("db:seed", { payload });
 
-export default defineEventHandler(async () => {
-  return seedCommand()
+  return { result };
 });
