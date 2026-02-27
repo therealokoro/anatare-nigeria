@@ -31,6 +31,7 @@ jobs:
         run: pnpm build
         env:
           NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
 
       - name: Apply D1 Migrations
         run: npx wrangler d1 migrations apply anatare-nigeria --remote
@@ -72,6 +73,7 @@ jobs:
         run: pnpm build
         env:
           NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
 
       - name: Deploy
         run: npx wrangler deploy
