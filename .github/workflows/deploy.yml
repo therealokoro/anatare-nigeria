@@ -78,7 +78,3 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-      - name: Run DB seed task
-        run: |
-          curl -f -X GET "https://anatarenigeria.org/api/auth/seed"
