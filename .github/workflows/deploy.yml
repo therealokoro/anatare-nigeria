@@ -7,9 +7,7 @@ on:
 jobs:
   migrate:
     runs-on: ubuntu-latest
-    concurrency:
-      group: migrate-${{ github.ref }}
-      cancel-in-progress: false
+    environment: production
 
     steps:
       - uses: actions/checkout@v4
@@ -41,9 +39,7 @@ jobs:
   deploy:
     needs: migrate
     runs-on: ubuntu-latest
-    concurrency:
-      group: deploy-${{ github.ref }}
-      cancel-in-progress: true
+    environment: production
 
     steps:
       - uses: actions/checkout@v4
@@ -85,4 +81,4 @@ jobs:
 
       - name: Run DB seed task
         run: |
-          curl -f -X POST "https://anatarenigeria.org/_nitro/tasks/db:seed"
+          curl -f -X POST "https://<your-worker-domain>/_nitro/tasks/db:seed"
