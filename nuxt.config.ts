@@ -58,7 +58,7 @@ export default defineNuxtConfig({
   vite: { optimizeDeps: { exclude: ['@tanstack/vue-query-devtools'] } },
 
   runtimeConfig: {
-    adminEmail: process.env.ADMIN_EMAIl,
+    adminEmail: process.env.ADMIN_EMAIL,
     adminPass: process.env.ADMIN_PASS,
     betterAuthSecret: '',
   },
