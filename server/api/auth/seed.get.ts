@@ -3,7 +3,7 @@ import { db } from "@nuxthub/db"
 import { user } from "#auth/schema"
 
 
-export default eventHandler(async () => {  
+export default eventHandler(async (event) => {  
   console.log("Running DB seed task...");
 
   const config = useRuntimeConfig()
@@ -23,7 +23,8 @@ export default eventHandler(async () => {
       name: "Administrator",
       email: config.adminEmail,
       password: config.adminPass
-    }
+    },
+    headers: new Headers(getRequestHeaders(event) as HeadersInit)
   })
 
   console.log("Admin created successfully.")
