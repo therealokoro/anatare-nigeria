@@ -6,10 +6,12 @@ import { user } from "#auth/schema"
 export default eventHandler(async (event) => {  
   console.log("Running DB seed task...");
 
-  const requestHeaders = getRequestHeaders(event)
-  console.log("Request headers:", requestHeaders)
-
   const config = useRuntimeConfig()
+
+  if(!config.adminEmail || !config.adminPass){
+    return { result: "Please provide admin credentials" }
+  }
+
   const auth = serverAuth()
 
   const [adminExist] = await db.select().from(user).where(eq(user.email, config.adminEmail))
@@ -26,7 +28,8 @@ export default eventHandler(async (event) => {
       name: "Administrator",
       email: config.adminEmail,
       password: config.adminPass
-    }
+    },
+    headers: new Headers(getRequestHeaders(event) as HeadersInit)
   })
 
   console.log("Admin created successfully.")
