@@ -12,8 +12,6 @@ export default eventHandler(async (event) => {
   const config = useRuntimeConfig()
   const auth = serverAuth()
 
-  console.log("credentials", { email: config.adminEmail, pass: config.adminPass })
-
   const [adminExist] = await db.select().from(user).where(eq(user.email, config.adminEmail))
 
   if (adminExist) {
@@ -28,8 +26,7 @@ export default eventHandler(async (event) => {
       name: "Administrator",
       email: config.adminEmail,
       password: config.adminPass
-    },
-    headers: new Headers(requestHeaders as HeadersInit)
+    }
   })
 
   console.log("Admin created successfully.")
