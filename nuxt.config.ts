@@ -58,8 +58,8 @@ export default defineNuxtConfig({
   vite: { optimizeDeps: { exclude: ['@tanstack/vue-query-devtools'] } },
 
   runtimeConfig: {
-    adminEmail: process.env.ADMIN_EMAIL,
-    adminPass: process.env.ADMIN_PASS,
+    adminEmail: '',
+    adminPass: '',
     betterAuthSecret: '',
   },
 
@@ -71,7 +71,5 @@ export default defineNuxtConfig({
 
   image: { quality: 80, format: ['webp'], provider: "none" },
 
-  $production: {
-    image: { provider: "cloudflare" }
-  }
+  $production: { image: { provider: "cloudflare" } }
 })

@@ -30,3 +30,5 @@ logs
 
 .wrangler
 .wrangler/**
+.wrangler/*
+.wrangler/*/**

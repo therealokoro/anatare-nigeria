@@ -6,7 +6,9 @@ import { user } from "#auth/schema"
 export default eventHandler(async (event) => {  
   console.log("Running DB seed task...");
 
-  const config = useRuntimeConfig()
+  const config = useRuntimeConfig(event)
+
+  console.log(config)
 
   if(!config.adminEmail || !config.adminPass){
     return { result: "Please provide admin credentials" }
