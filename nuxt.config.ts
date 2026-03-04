@@ -61,6 +61,7 @@ export default defineNuxtConfig({
     adminEmail: '',
     adminPass: '',
     betterAuthSecret: '',
+    seedSecret: ""
   },
 
   routeRules: {
