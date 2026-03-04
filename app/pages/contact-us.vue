@@ -7,7 +7,7 @@ const form = ref({
 })
 
 const onSubmit = () => {
-  console.log("Form submitted:", form.value)
+  // console.log("Form submitted:", form.value)
   // You can integrate your actual submission logic here
 }
 </script>

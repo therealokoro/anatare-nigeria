@@ -8,8 +8,6 @@ export default eventHandler(async (event) => {
 
   const config = useRuntimeConfig(event)
 
-  console.log(config)
-
   if(!config.adminEmail || !config.adminPass){
     return { result: "Please provide admin credentials" }
   }
