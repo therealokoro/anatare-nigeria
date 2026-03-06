@@ -1,4 +1,4 @@
-import { hashPassword } from "better-auth/crypto"
+import { randomUUID } from "crypto"
 
 const {
   NUXT_ADMIN_EMAIL: email,
@@ -10,7 +10,15 @@ if (!email || !password) {
   process.exit(1)
 }
 
-const hashed = await hashPassword(password)
+// Generate a random salt
+const salt = crypto.getRandomValues(new Uint8Array(16))
+const saltHex = Buffer.from(salt).toString("hex")
 
-// Write only the hash to stdout so the workflow can capture it cleanly
-process.stdout.write(hashed)
+// Hash the password with the salt using SHA-256 (Web Crypto API — same as Cloudflare Workers)
+const encoder = new TextEncoder()
+const data = encoder.encode(saltHex + password)
+const hash = await crypto.subtle.digest("SHA-256", data)
+const hashHex = Buffer.from(hash).toString("hex")
+
+// Output in salt:hash format — matches the verify function in auth config
+process.stdout.write(`${saltHex}:${hashHex}`)
