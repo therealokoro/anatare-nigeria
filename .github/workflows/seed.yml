@@ -1,0 +1,48 @@
+name: Seed Admin User
+
+on:
+  workflow_dispatch:  # only runs when you manually trigger it
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Seed Admin User
+        run: |
+          HASHED=$(node scripts/seed-admin.mjs)
+          echo "✅ Password hashed"
+
+          NOW=$(date -u +"%Y-%m-%d %H:%M:%S")
+          USER_ID=$(node --input-type=module -e "console.log(crypto.randomUUID())")
+          ACCOUNT_ID=$(node --input-type=module -e "console.log(crypto.randomUUID())")
+
+          npx wrangler d1 execute anatare-nigeria --remote --command \
+            "INSERT INTO user (id, name, email, emailVerified, createdAt, updatedAt)
+             VALUES ('$USER_ID', 'Administrator', '$NUXT_ADMIN_EMAIL', 1, '$NOW', '$NOW');"
+
+          npx wrangler d1 execute anatare-nigeria --remote --command \
+            "INSERT INTO account (id, accountId, providerId, userId, password, createdAt, updatedAt)
+             VALUES ('$ACCOUNT_ID', '$NUXT_ADMIN_EMAIL', 'credential', '$USER_ID', '$HASHED', '$NOW', '$NOW');"
+
+          echo "✅ Admin seeded successfully"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          NUXT_ADMIN_EMAIL: ${{ secrets.NUXT_ADMIN_EMAIL }}
+          NUXT_ADMIN_PASS: ${{ secrets.NUXT_ADMIN_PASS }}
